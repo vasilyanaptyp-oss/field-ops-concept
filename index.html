@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>FieldOps: daily production entry and office view</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="page-head">
+  <div class="wrap">
+    <p class="eyebrow">FieldOps · design sample for an onshore producer</p>
+    <h1>One product, two very different users</h1>
+    <p class="lead">Left: an operator at the well site, gloves on, weak signal. Right: the office, heavy tables and exports. Same components, same language. Everything below works: change the numbers, go offline, save, then come back online.</p>
+  </div>
+</header>
+
+<main class="wrap stage">
+  <!-- ================= TABLET: field operator ================= -->
+  <section class="device" aria-label="Field tablet">
+    <div class="tablet">
+      <div class="t-top">
+        <div class="t-brand"><span class="logo" aria-hidden="true"></span>FieldOps</div>
+        <div class="t-route">Route A · Battery 2</div>
+        <button class="sync" id="syncBtn" type="button" aria-live="polite">
+          <span class="dot"></span><span id="syncText">Online · all synced</span>
+        </button>
+      </div>
+
+      <div class="offline-banner" id="offBanner" hidden>
+        <strong>Working offline.</strong> <span id="offCount">0 entries</span> saved on this tablet and will send when signal is back.
+      </div>
+
+      <div class="t-body">
+        <div class="well-head">
+          <div>
+            <p class="k">Well</p>
+            <h2 id="wellName">W-07 · Battery 2</h2>
+            <p class="k sub">Rod pump · last entry yesterday 06:40 by M. Ortiz</p>
+          </div>
+          <div class="well-nav">
+            <button class="btn ghost big" type="button" id="prevWell" aria-label="Previous well">‹</button>
+            <span class="pos" id="wellPos">7 / 18</span>
+            <button class="btn ghost big" type="button" id="nextWell" aria-label="Next well">›</button>
+          </div>
+        </div>
+
+        <div class="grid-fields">
+          <div class="field" data-key="oil" data-step="1">
+            <label>Oil</label>
+            <div class="stepper"><button type="button" class="st minus" aria-label="Less oil">−</button><output>42</output><span class="unit">bbl</span><button type="button" class="st plus" aria-label="More oil">+</button></div>
+            <p class="hint">Yesterday 44</p>
+          </div>
+          <div class="field" data-key="gas" data-step="5">
+            <label>Gas</label>
+            <div class="stepper"><button type="button" class="st minus" aria-label="Less gas">−</button><output>185</output><span class="unit">mcf</span><button type="button" class="st plus" aria-label="More gas">+</button></div>
+            <p class="hint">Yesterday 190</p>
+          </div>
+          <div class="field" data-key="water" data-step="1">
+            <label>Water</label>
+            <div class="stepper"><button type="button" class="st minus" aria-label="Less water">−</button><output>66</output><span class="unit">bbl</span><button type="button" class="st plus" aria-label="More water">+</button></div>
+            <p class="hint">Yesterday 63</p>
+          </div>
+          <div class="field" data-key="tubing" data-step="5">
+            <label>Tubing pressure</label>
+            <div class="stepper"><button type="button" class="st minus" aria-label="Lower tubing pressure">−</button><output>140</output><span class="unit">psi</span><button type="button" class="st plus" aria-label="Higher tubing pressure">+</button></div>
+            <p class="hint">Normal 120 to 160</p>
+          </div>
+          <div class="field" data-key="casing" data-step="5">
+            <label>Casing pressure</label>
+            <div class="stepper"><button type="button" class="st minus" aria-label="Lower casing pressure">−</button><output>95</output><span class="unit">psi</span><button type="button" class="st plus" aria-label="Higher casing pressure">+</button></div>
+            <p class="hint">Normal 80 to 110</p>
+          </div>
+          <div class="field" data-key="down" data-step="0.5">
+            <label>Downtime</label>
+            <div class="stepper"><button type="button" class="st minus" aria-label="Less downtime">−</button><output>0</output><span class="unit">h</span><button type="button" class="st plus" aria-label="More downtime">+</button></div>
+            <p class="hint">Reason appears when above 0</p>
+          </div>
+        </div>
+
+        <div class="reasons" id="reasons" hidden>
+          <p class="k">Downtime reason</p>
+          <div class="chips" role="radiogroup" aria-label="Downtime reason">
+            <button type="button" class="chip" role="radio" aria-checked="false">Pump failure</button>
+            <button type="button" class="chip" role="radio" aria-checked="false">Power</button>
+            <button type="button" class="chip" role="radio" aria-checked="false">Tank full</button>
+            <button type="button" class="chip" role="radio" aria-checked="false">Workover</button>
+            <button type="button" class="chip" role="radio" aria-checked="false">Weather</button>
+            <button type="button" class="chip" role="radio" aria-checked="false">Other</button>
+          </div>
+        </div>
+
+        <div class="warn" id="warn" hidden>Tubing pressure is outside the normal range. Add a note or a photo before saving.</div>
+
+        <div class="t-actions">
+          <button class="btn ghost big" type="button" id="photoBtn">Add photo</button>
+          <button class="btn primary big" type="button" id="saveBtn">Save and next well</button>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Tablet, landscape. Every target is at least 64 px, one number per tap, yesterday's value always visible.</p>
+  </section>
+
+  <!-- ================= OFFICE ================= -->
+  <section class="office" aria-label="Office view">
+    <div class="o-head">
+      <div>
+        <p class="k">Production · today</p>
+        <h2>All wells</h2>
+      </div>
+      <button class="btn dark" type="button" id="exportBtn">Export to Excel (.csv)</button>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><p class="k">Oil</p><p class="v"><span id="kOil">0</span> <small>bbl</small></p></div>
+      <div class="kpi"><p class="k">Gas</p><p class="v"><span id="kGas">0</span> <small>mcf</small></p></div>
+      <div class="kpi"><p class="k">Water</p><p class="v"><span id="kWater">0</span> <small>bbl</small></p></div>
+      <div class="kpi"><p class="k">Downtime</p><p class="v"><span id="kDown">0</span> <small>h</small></p></div>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filter by battery">
+      <button type="button" class="fchip is-on" data-b="all">All batteries</button>
+      <button type="button" class="fchip" data-b="1">Battery 1</button>
+      <button type="button" class="fchip" data-b="2">Battery 2</button>
+      <button type="button" class="fchip" data-b="3">Battery 3</button>
+      <button type="button" class="fchip" data-b="4">Battery 4</button>
+    </div>
+
+    <div class="table-wrap">
+      <table id="tbl">
+        <thead><tr><th>Well</th><th>Battery</th><th class="n">Oil</th><th class="n">Gas</th><th class="n">Water</th><th class="n">TP</th><th class="n">CP</th><th class="n">Down</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="caption">Office, desktop. Same chips, same status colours, dense rows, sticky header, export in one click.</p>
+  </section>
+
+  <!-- ================= COMPONENTS ================= -->
+  <section class="lib" aria-label="Component library preview">
+    <h2>Shared components</h2>
+    <p class="lead small">Built once in Figma with auto layout and variants, named for the React developers.</p>
+    <div class="lib-grid">
+      <div class="swatch"><p class="k">Button / Primary / Large</p><button class="btn primary big" type="button">Save and next well</button></div>
+      <div class="swatch"><p class="k">Stepper / Field / Default</p><div class="stepper small-demo"><span class="st">−</span><output>42</output><span class="unit">bbl</span><span class="st">+</span></div></div>
+      <div class="swatch"><p class="k">StatusChip / Synced · Pending · Error</p><div class="chips"><span class="schip ok">Synced</span><span class="schip pend">Pending</span><span class="schip err">Error</span></div></div>
+      <div class="swatch"><p class="k">Banner / Offline</p><div class="offline-banner static"><strong>Working offline.</strong> 3 entries saved on this tablet.</div></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot wrap"><p>Design sample by Artur Vasilyan · vasylian.com</p></footer>
+<script src="app.js"></script>
+</body>
+</html>
